@@ -29,7 +29,7 @@ func ConnectToDatabase() (*gorm.DB, error) {
 
 	PopulateUserTableColumnMap()
 
-	db.AutoMigrate(&dbmodel.User{})
+	db.AutoMigrate(&dbmodel.User{}, &dbmodel.Task{})
 	return db, nil
 }
 
