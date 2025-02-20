@@ -4,6 +4,7 @@ import (
 	"log"
 
 	dbmodel "github.com/todo_manager/pkg/model/db_model"
+	"github.com/todo_manager/pkg/util"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,6 +26,14 @@ func ConnectToDatabase() (*gorm.DB, error) {
 		log.Fatal(err)
 		return nil, err
 	}
+
+	PopulateUserTableColumnMap()
+
 	db.AutoMigrate(&dbmodel.User{})
 	return db, nil
+}
+
+func PopulateUserTableColumnMap() {
+	util.Choices["username"] = "username"
+	util.Choices["email_id"] = "email_id"
 }

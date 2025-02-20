@@ -11,4 +11,5 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.GET("/viewallusers", handler.ViewAllUsers)
 	router.GET("/viewuser", handler.ViewUser)
 	router.PUT("/updatealldetails/:id", handler.UpdateAllDetails)
+	router.PATCH("/updatedetail", handler.UpdateDetail)
 }

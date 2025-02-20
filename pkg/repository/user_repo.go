@@ -9,13 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
-func (r *repo) SignUpRepo(userData dbmodel.User) (uint, int, error) {
+func (r *repo) SignUpRepo(userData dbmodel.User) (dbmodel.User, int, error) {
 	tx := r.db.Create(&userData)
 	if err := tx.Error; err != nil {
 		log.Error().Err(err)
-		return 0, http.StatusInternalServerError, err
+		return dbmodel.User{}, http.StatusInternalServerError, err
 	}
-	return userData.ID, http.StatusAccepted, nil
+	return userData, http.StatusAccepted, nil
 }
 
 func (r *repo) CheckEmail(email string) (dbmodel.User, int, error) {
@@ -58,6 +58,38 @@ func (r *repo) UpdateAllDetails(id uint, request model.UserDetailsUpdate) (dbmod
 	tx := r.db.Model(&userDetail).Updates(dbmodel.User{
 		Username: request.Username,
 		EmailID:  request.EmailID,
+	})
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return dbmodel.User{}, http.StatusBadRequest, err
+	}
+	return userDetail, http.StatusAccepted, nil
+}
+
+func (r *repo) UpdateDetailUsername(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error) {
+	userDetail := dbmodel.User{
+		Model: gorm.Model{
+			ID: id,
+		},
+	}
+	tx := r.db.Model(&userDetail).Updates(dbmodel.User{
+		Username: req.UpdateValue,
+	})
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return dbmodel.User{}, http.StatusBadRequest, err
+	}
+	return userDetail, http.StatusAccepted, nil
+}
+
+func (r *repo) UpdateDetailEmail(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error) {
+	userDetail := dbmodel.User{
+		Model: gorm.Model{
+			ID: id,
+		},
+	}
+	tx := r.db.Model(&userDetail).Updates(dbmodel.User{
+		EmailID: req.UpdateValue,
 	})
 	if err := tx.Error; err != nil {
 		log.Error().Err(err)

@@ -25,3 +25,7 @@ type UserDetailsUpdate struct {
 	Username string `json:"username"`
 	EmailID  string `json:"email_id"`
 }
+
+type UserDetailUpdate struct {
+	UpdateValue string `json:"updateValue"`
+}

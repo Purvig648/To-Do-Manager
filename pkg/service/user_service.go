@@ -8,28 +8,29 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/todo_manager/pkg/model"
 	dbmodel "github.com/todo_manager/pkg/model/db_model"
+	"github.com/todo_manager/pkg/util"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s *service) SignUpService(signUpData model.SignUp) (uint, int, error) {
+func (s *service) SignUpService(signUpData model.SignUp) (dbmodel.User, int, error) {
 	if signUpData.EmailID == "" {
 		log.Error().Err(errors.New("email_id is required")).Msg("email_id is empty")
-		return 0, http.StatusBadRequest, errors.New("emailID is empty")
+		return dbmodel.User{}, http.StatusBadRequest, errors.New("emailID is empty")
 	} else {
 		re := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 		if !re.MatchString(signUpData.EmailID) {
 			log.Error().Err(errors.New("email_id is not valid")).Msg("email_id is not valid")
-			return 0, http.StatusBadRequest, errors.New("Invalid emailID")
+			return dbmodel.User{}, http.StatusBadRequest, errors.New("Invalid emailID")
 		}
 	}
 	if signUpData.Password != signUpData.ConfirmPassword {
 		log.Error().Err(errors.New("the passwords don't match")).Msg("the passwords don't match")
-		return 0, http.StatusBadRequest, errors.New("different passwords")
+		return dbmodel.User{}, http.StatusBadRequest, errors.New("different passwords")
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(signUpData.Password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Error().Err(errors.New("cannot hash password")).Msg("cannot hash the password")
-		return 0, http.StatusBadRequest, err
+		return dbmodel.User{}, http.StatusBadRequest, err
 	}
 	dbUserData := dbmodel.User{
 		Username:       signUpData.Username,
@@ -37,11 +38,11 @@ func (s *service) SignUpService(signUpData model.SignUp) (uint, int, error) {
 		HashedPassword: string(hashedPassword),
 	}
 
-	userID, statusCode, err := s.repo.SignUpRepo(dbUserData)
+	userData, statusCode, err := s.repo.SignUpRepo(dbUserData)
 	if err != nil {
-		return 0, statusCode, err
+		return dbmodel.User{}, statusCode, err
 	}
-	return userID, statusCode, nil
+	return userData, statusCode, nil
 }
 
 func (s *service) SignInService(signInData model.SignIn) (int, error) {
@@ -96,4 +97,28 @@ func (s *service) UpdateAllDetails(id uint, req model.UserDetailsUpdate) (model.
 		Username: userDetailsUpdated.Username,
 		EmailID:  userDetailsUpdated.EmailID,
 	}, statusCode, nil
+}
+
+func (s *service) UpdateDetail(uid uint, req model.UserDetailUpdate, choice string) (model.UserResponse, int, error) {
+	val, _ := util.Choices[choice]
+	if val == "username" {
+		resp, ststausCode, err := s.repo.UpdateDetailUsername(uid, req)
+		if err != nil {
+			log.Error().Err(err)
+			return model.UserResponse{}, ststausCode, err
+		}
+		return model.UserResponse{
+			Username: resp.Username,
+		}, ststausCode, nil
+	} else if val == "email_id" {
+		resp, statusCode, err := s.repo.UpdateDetailEmail(uid, req)
+		if err != nil {
+			log.Error().Err(err)
+			return model.UserResponse{}, statusCode, err
+		}
+		return model.UserResponse{
+			EmailID: resp.EmailID,
+		}, statusCode, nil
+	}
+	return model.UserResponse{}, http.StatusAccepted, nil
 }

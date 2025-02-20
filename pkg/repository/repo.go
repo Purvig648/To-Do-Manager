@@ -11,11 +11,13 @@ type repo struct {
 }
 
 type RepoInterface interface {
-	SignUpRepo(userData dbmodel.User) (uint, int, error)
+	SignUpRepo(userData dbmodel.User) (dbmodel.User, int, error)
 	CheckEmail(email string) (dbmodel.User, int, error)
 	ViewAllUsers() ([]dbmodel.User, int, error)
 	ViewUser(request model.UserRequest) (dbmodel.User, int, error)
 	UpdateAllDetails(id uint, request model.UserDetailsUpdate) (dbmodel.User, int, error)
+	UpdateDetailUsername(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error)
+	UpdateDetailEmail(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error)
 }
 
 func NewRepoLayer(db *gorm.DB) RepoInterface {

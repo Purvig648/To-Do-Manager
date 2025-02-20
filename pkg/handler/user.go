@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/todo_manager/pkg/model"
+	"github.com/todo_manager/pkg/util"
 )
 
 func (h *handler) SignUp(c *gin.Context) {
@@ -117,6 +118,44 @@ func (h *handler) UpdateAllDetails(c *gin.Context) {
 		return
 	}
 	resp, statusCode, err := h.svc.UpdateAllDetails(uint(ID), userDetail)
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": "could not update details",
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": resp,
+		"Message":  "updated successfully",
+	})
+}
+
+func (h *handler) UpdateDetail(c *gin.Context) {
+	id := c.Query("id")
+	choice := c.Query("choice")
+	if _, ok := util.Choices[choice]; !ok {
+		return
+	}
+	userDetail := model.UserDetailUpdate{}
+	err := c.BindJSON(&userDetail)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": "could not convert to int",
+		})
+		return
+	}
+	resp, statusCode, err := h.svc.UpdateDetail(uint(uid), userDetail, choice)
 	if err != nil {
 		c.JSON(statusCode, gin.H{
 			"error":    err.Error(),
