@@ -49,3 +49,19 @@ func (h *handler) CreateTask(c *gin.Context) {
 		"response": taskResponse,
 	})
 }
+
+func (h *handler) ViewAllTask(c *gin.Context) {
+	resp, statusCode, err := h.svc.ViewAllTask()
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": resp,
+	})
+
+}

@@ -19,6 +19,7 @@ type ServiceInterface interface {
 	UpdateDetail(uid uint, req model.UserDetailUpdate, choice string) (model.UserResponse, int, error)
 
 	CreateTask(id uint, req model.Task) (dbmodel.Task, int, error)
+	ViewAllTask() ([]model.TaskResponse, int, error)
 }
 
 func NewServiceLayer(repo repository.RepoInterface) ServiceInterface {

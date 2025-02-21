@@ -16,3 +16,13 @@ func (r *repo) CreateTask(uid uint, taskData dbmodel.Task) (dbmodel.Task, int, e
 	}
 	return taskData, http.StatusAccepted, nil
 }
+
+func (r *repo) ViewAllTasK() ([]dbmodel.Task, int, error) {
+	var allTasks []dbmodel.Task
+	tx := r.db.Find(&allTasks)
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return nil, http.StatusBadRequest, err
+	}
+	return allTasks, http.StatusAccepted, nil
+}

@@ -14,4 +14,5 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.PATCH("/updatedetail", handler.UpdateDetail)
 
 	router.POST("/createtask/:id", handler.CreateTask)
+	router.GET("/viewalltask", handler.ViewAllTask)
 }

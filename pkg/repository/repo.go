@@ -20,6 +20,7 @@ type RepoInterface interface {
 	UpdateDetailEmail(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error)
 
 	CreateTask(uid uint, taskData dbmodel.Task) (dbmodel.Task, int, error)
+	ViewAllTasK() ([]dbmodel.Task, int, error)
 }
 
 func NewRepoLayer(db *gorm.DB) RepoInterface {
