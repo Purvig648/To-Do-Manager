@@ -40,3 +40,23 @@ func (s *service) ViewAllTask() ([]model.TaskResponse, int, error) {
 	}
 	return taskDetail, statusCode, nil
 }
+
+func (s *service) ViewAllTaskOfUser(uid uint) ([]model.TaskResponse, int, error) {
+	alluserTasks, statusCode, err := s.repo.ViewAllTaskOfUser(uid)
+	if err != nil {
+		log.Error().Err(err)
+		return nil, statusCode, err
+	}
+	alltaskDetail := []model.TaskResponse{}
+	for i := 0; i < len(alluserTasks); i++ {
+		alltaskDetail = append(alltaskDetail, model.TaskResponse{
+			ID:              alluserTasks[i].ID,
+			TaskName:        alluserTasks[i].TaskName,
+			TaskDescription: alluserTasks[i].TaskDescription,
+			TaskDeadline:    alluserTasks[i].TaskDeadline,
+			TaskStatus:      alluserTasks[i].TaskStatus,
+			UserID:          alluserTasks[i].UserID,
+		})
+	}
+	return alltaskDetail, statusCode, nil
+}

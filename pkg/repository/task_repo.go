@@ -26,3 +26,13 @@ func (r *repo) ViewAllTasK() ([]dbmodel.Task, int, error) {
 	}
 	return allTasks, http.StatusAccepted, nil
 }
+
+func (r *repo) ViewAllTaskOfUser(uid uint) ([]dbmodel.Task, int, error) {
+	var alluserTasks []dbmodel.Task
+	tx := r.db.Where("user_id", uid).Find(&alluserTasks)
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return nil, http.StatusBadRequest, err
+	}
+	return alluserTasks, http.StatusAccepted, nil
+}

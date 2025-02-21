@@ -65,3 +65,28 @@ func (h *handler) ViewAllTask(c *gin.Context) {
 	})
 
 }
+
+func (h *handler) ViewAllTaskOfUser(c *gin.Context) {
+	id := c.Param("id")
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+
+	resp, statusCode, err := h.svc.ViewAllTaskOfUser(uint(uid))
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": resp,
+	})
+}
