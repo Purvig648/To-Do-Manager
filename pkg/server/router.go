@@ -16,4 +16,5 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.POST("/createtask/:id", handler.CreateTask)
 	router.GET("/viewalltask", handler.ViewAllTask)
 	router.GET("/viewaalltaskofuser/:id", handler.ViewAllTaskOfUser)
+	router.GET("/viewtask/:id", handler.ViewTask)
 }

@@ -22,6 +22,7 @@ type RepoInterface interface {
 	CreateTask(uid uint, taskData dbmodel.Task) (dbmodel.Task, int, error)
 	ViewAllTasK() ([]dbmodel.Task, int, error)
 	ViewAllTaskOfUser(uid uint) ([]dbmodel.Task, int, error)
+	ViewTask(uid uint) (dbmodel.Task, int, error)
 }
 
 func NewRepoLayer(db *gorm.DB) RepoInterface {

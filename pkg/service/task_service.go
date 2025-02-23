@@ -60,3 +60,18 @@ func (s *service) ViewAllTaskOfUser(uid uint) ([]model.TaskResponse, int, error)
 	}
 	return alltaskDetail, statusCode, nil
 }
+
+func (s *service) ViewTask(tid uint) (model.TaskResponse, int, error) {
+	taskDetail, statusCode, err := s.repo.ViewTask(tid)
+	if err != nil {
+		log.Error().Err(err)
+		return model.TaskResponse{}, statusCode, err
+	}
+	return model.TaskResponse{
+		ID:              tid,
+		TaskName:        taskDetail.TaskName,
+		TaskDescription: taskDetail.TaskDescription,
+		TaskDeadline:    taskDetail.TaskDeadline,
+		TaskStatus:      taskDetail.TaskStatus,
+	}, statusCode, nil
+}

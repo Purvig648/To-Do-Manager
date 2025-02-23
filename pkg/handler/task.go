@@ -90,3 +90,27 @@ func (h *handler) ViewAllTaskOfUser(c *gin.Context) {
 		"response": resp,
 	})
 }
+
+func (h *handler) ViewTask(c *gin.Context) {
+	id := c.Param("id")
+	tid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	taskDetail, statusCode, err := h.svc.ViewTask(uint(tid))
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": taskDetail,
+	})
+}

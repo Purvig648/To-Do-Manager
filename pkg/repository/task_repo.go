@@ -36,3 +36,13 @@ func (r *repo) ViewAllTaskOfUser(uid uint) ([]dbmodel.Task, int, error) {
 	}
 	return alluserTasks, http.StatusAccepted, nil
 }
+
+func (r *repo) ViewTask(tid uint) (dbmodel.Task, int, error) {
+	var taskDetail dbmodel.Task
+	tx := r.db.Where("id", tid).First(&taskDetail)
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return dbmodel.Task{}, http.StatusBadRequest, err
+	}
+	return taskDetail, http.StatusAccepted, nil
+}
