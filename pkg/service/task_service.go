@@ -89,3 +89,18 @@ func (s *service) UpdateTaskStatus(tid uint, taskStatusChoice string) (model.Tas
 		TasKStatus: resp.TaskStatus,
 	}, statusCode, nil
 }
+
+func (s *service) UpadteAllTaskDetail(tid uint, taskDetailUpdate model.TaskDetailsUpdate) (model.TaskResponse, int, error) {
+	resp, statusCode, err := s.repo.UpadteAllTaskDetail(tid, taskDetailUpdate)
+	if err != nil {
+		log.Error().Err(err)
+		return model.TaskResponse{}, statusCode, err
+	}
+	return model.TaskResponse{
+		ID:              resp.ID,
+		TaskName:        resp.TaskName,
+		TaskDescription: resp.TaskDescription,
+		TaskDeadline:    resp.TaskDeadline,
+		TaskStatus:      resp.TaskStatus,
+	}, statusCode, nil
+}

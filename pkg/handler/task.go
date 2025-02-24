@@ -149,3 +149,39 @@ func (h *handler) UpdateTaskStatus(c *gin.Context) {
 		"Message":  "updated successfully",
 	})
 }
+
+func (h *handler) UpadteAllTaskDetail(c *gin.Context) {
+	id := c.Param("id")
+	tid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+			"message":  "not a valid format",
+		})
+		return
+	}
+	taskUpdateDetails := model.TaskDetailsUpdate{}
+	err = c.BindJSON(&taskUpdateDetails)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+			"message":  "could not bind JSON",
+		})
+		return
+	}
+	resp, statusCode, err := h.svc.UpadteAllTaskDetail(uint(tid), taskUpdateDetails)
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": resp,
+		"message":  "updated successfully",
+	})
+}

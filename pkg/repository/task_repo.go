@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog/log"
+	"github.com/todo_manager/pkg/model"
 	dbmodel "github.com/todo_manager/pkg/model/db_model"
 	"gorm.io/gorm"
 )
@@ -62,4 +63,23 @@ func (r *repo) UpdateTaskStatus(tid uint, choice string) (dbmodel.Task, int, err
 		return dbmodel.Task{}, http.StatusBadRequest, err
 	}
 	return taskStatusDetail, http.StatusAccepted, nil
+}
+
+func (r *repo) UpadteAllTaskDetail(tid uint, taskUpdateDetails model.TaskDetailsUpdate) (dbmodel.Task, int, error) {
+	taskUpdateDetail := dbmodel.Task{
+		Model: gorm.Model{
+			ID: tid,
+		},
+	}
+	tx := r.db.Model(&taskUpdateDetail).Updates(dbmodel.Task{
+		TaskName:        taskUpdateDetails.TaskName,
+		TaskDescription: taskUpdateDetails.TaskDescription,
+		TaskDeadline:    taskUpdateDetails.TaskDeadline,
+		TaskStatus:      taskUpdateDetails.TaskStatus,
+	})
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return dbmodel.Task{}, http.StatusBadRequest, err
+	}
+	return taskUpdateDetail, http.StatusAccepted, nil
 }

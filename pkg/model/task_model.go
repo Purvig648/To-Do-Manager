@@ -22,3 +22,10 @@ type TaskStatusResp struct {
 	ID         uint   `json:"id"`
 	TasKStatus string `json:"taskStatus"`
 }
+
+type TaskDetailsUpdate struct {
+	TaskName        string    `json:"taskname"`
+	TaskDescription string    `json:"taskdescription"`
+	TaskDeadline    time.Time `json:"taskdeadline"`
+	TaskStatus      string    `json:"taskstatus"`
+}
