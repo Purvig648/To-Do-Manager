@@ -28,6 +28,7 @@ func ConnectToDatabase() (*gorm.DB, error) {
 	}
 
 	PopulateUserTableColumnMap()
+	PopulateTaskStatusColumnMMap()
 
 	db.AutoMigrate(&dbmodel.User{}, &dbmodel.Task{})
 	return db, nil
@@ -36,4 +37,10 @@ func ConnectToDatabase() (*gorm.DB, error) {
 func PopulateUserTableColumnMap() {
 	util.Choices["username"] = "username"
 	util.Choices["email_id"] = "email_id"
+}
+
+func PopulateTaskStatusColumnMMap() {
+	util.TaskChoices["In Progres"] = "In Progress"
+	util.TaskChoices["Completed"] = "Completed"
+	util.TaskChoices["Skip"] = "Skip"
 }

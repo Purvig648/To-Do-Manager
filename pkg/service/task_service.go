@@ -4,6 +4,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/todo_manager/pkg/model"
 	dbmodel "github.com/todo_manager/pkg/model/db_model"
+	"github.com/todo_manager/pkg/util"
 )
 
 func (s *service) CreateTask(id uint, req model.Task) (dbmodel.Task, int, error) {
@@ -73,5 +74,18 @@ func (s *service) ViewTask(tid uint) (model.TaskResponse, int, error) {
 		TaskDescription: taskDetail.TaskDescription,
 		TaskDeadline:    taskDetail.TaskDeadline,
 		TaskStatus:      taskDetail.TaskStatus,
+	}, statusCode, nil
+}
+
+func (s *service) UpdateTaskStatus(tid uint, taskStatusChoice string) (model.TaskStatusResp, int, error) {
+	val, _ := util.TaskChoices[taskStatusChoice]
+	resp, statusCode, err := s.repo.UpdateTaskStatus(tid, val)
+	if err != nil {
+		log.Error().Err(err)
+		return model.TaskStatusResp{}, statusCode, err
+	}
+	return model.TaskStatusResp{
+		ID:         resp.ID,
+		TasKStatus: resp.TaskStatus,
 	}, statusCode, nil
 }

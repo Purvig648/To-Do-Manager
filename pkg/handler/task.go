@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/todo_manager/pkg/model"
+	"github.com/todo_manager/pkg/util"
 )
 
 func (h *handler) CreateTask(c *gin.Context) {
@@ -112,5 +113,39 @@ func (h *handler) ViewTask(c *gin.Context) {
 	c.JSON(statusCode, gin.H{
 		"error":    nil,
 		"response": taskDetail,
+	})
+}
+
+func (h *handler) UpdateTaskStatus(c *gin.Context) {
+	id := c.Query("id")
+	taskStatusChoice := c.Query("choice")
+	if _, ok := util.TaskChoices[taskStatusChoice]; !ok {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    "not a valid request",
+			"response": nil,
+		})
+		return
+	}
+	tid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+			"Message":  "could not convert",
+		})
+		return
+	}
+	resp, statusCode, err := h.svc.UpdateTaskStatus(uint(tid), taskStatusChoice)
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":    nil,
+		"response": resp,
+		"Message":  "updated successfully",
 	})
 }

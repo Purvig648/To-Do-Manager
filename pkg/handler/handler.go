@@ -21,6 +21,7 @@ type HandlerInterface interface {
 	ViewAllTask(c *gin.Context)
 	ViewAllTaskOfUser(c *gin.Context)
 	ViewTask(c *gin.Context)
+	UpdateTaskStatus(c *gin.Context)
 }
 
 func NewHandlerLayer(svc service.ServiceInterface) HandlerInterface {

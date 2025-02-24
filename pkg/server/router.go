@@ -17,4 +17,5 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.GET("/viewalltask", handler.ViewAllTask)
 	router.GET("/viewaalltaskofuser/:id", handler.ViewAllTaskOfUser)
 	router.GET("/viewtask/:id", handler.ViewTask)
+	router.PUT("/updateTaskStatus", handler.UpdateTaskStatus)
 }

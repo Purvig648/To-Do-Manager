@@ -17,3 +17,8 @@ type TaskResponse struct {
 	TaskStatus      string    `json:"taskstatus"`
 	UserID          uint      `json:"user_id"`
 }
+
+type TaskStatusResp struct {
+	ID         uint   `json:"id"`
+	TasKStatus string `json:"taskStatus"`
+}
