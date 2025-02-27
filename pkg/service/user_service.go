@@ -15,12 +15,12 @@ import (
 func (s *service) SignUpService(signUpData model.SignUp) (dbmodel.User, int, error) {
 	if signUpData.EmailID == "" {
 		log.Error().Err(errors.New("email_id is required")).Msg("email_id is empty")
-		return dbmodel.User{}, http.StatusBadRequest, errors.New("emailID is empty")
+		return dbmodel.User{}, http.StatusBadRequest, errors.New("email_id is empty")
 	} else {
 		re := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 		if !re.MatchString(signUpData.EmailID) {
 			log.Error().Err(errors.New("email_id is not valid")).Msg("email_id is not valid")
-			return dbmodel.User{}, http.StatusBadRequest, errors.New("Invalid emailID")
+			return dbmodel.User{}, http.StatusBadRequest, errors.New("invalid email_id")
 		}
 	}
 	if signUpData.Password != signUpData.ConfirmPassword {

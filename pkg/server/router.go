@@ -6,19 +6,26 @@ import (
 )
 
 func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
-	router.POST("/signup", handler.SignUp)
-	router.GET("/signin", handler.SignIn)
-	router.GET("/viewallusers", handler.ViewAllUsers)
-	router.GET("/viewuser", handler.ViewUser)
-	router.PUT("/updatealldetails/:id", handler.UpdateAllDetails)
-	router.PATCH("/updatedetail", handler.UpdateDetail)
-	router.DELETE("/deleteuser/:id", handler.DeleteUser)
 
-	router.POST("/createtask/:id", handler.CreateTask)
-	router.GET("/viewalltask", handler.ViewAllTask)
-	router.GET("/viewaalltaskofuser/:id", handler.ViewAllTaskOfUser)
-	router.GET("/viewtask/:id", handler.ViewTask)
-	router.PATCH("/updatetaskstatus", handler.UpdateTaskStatus)
-	router.PUT("/updatealldetailsoftask/:id", handler.UpadteAllTaskDetail)
-	router.DELETE("/deletetask/:id", handler.DeleteTask)
+	userRelatedTasks := router.Group("/user")
+	{
+		userRelatedTasks.POST("/signup", handler.SignUp)
+		userRelatedTasks.GET("/signin", handler.SignIn)
+		userRelatedTasks.GET("/viewallusers", handler.ViewAllUsers)
+		userRelatedTasks.GET("/viewuser", handler.ViewUser)
+		userRelatedTasks.PUT("/updatealldetails/:id", handler.UpdateAllDetails)
+		userRelatedTasks.PATCH("/updatedetail", handler.UpdateDetail)
+		userRelatedTasks.DELETE("/deleteuser/:id", handler.DeleteUser)
+	}
+
+	taskRelatedTasks := router.Group("/tasks")
+	{
+		taskRelatedTasks.POST("/createtask/:id", handler.CreateTask)
+		taskRelatedTasks.GET("/viewalltask", handler.ViewAllTask)
+		taskRelatedTasks.GET("/viewaalltaskofuser/:id", handler.ViewAllTaskOfUser)
+		taskRelatedTasks.GET("/viewtask/:id", handler.ViewTask)
+		taskRelatedTasks.PATCH("/updatetaskstatus", handler.UpdateTaskStatus)
+		taskRelatedTasks.PUT("/updatealldetailsoftask/:id", handler.UpadteAllTaskDetail)
+		taskRelatedTasks.DELETE("/deletetask/:id", handler.DeleteTask)
+	}
 }
