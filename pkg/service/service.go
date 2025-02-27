@@ -25,6 +25,7 @@ type ServiceInterface interface {
 	ViewTask(tid uint) (model.TaskResponse, int, error)
 	UpdateTaskStatus(tid uint, taskStatusChoice string) (model.TaskStatusResp, int, error)
 	UpadteAllTaskDetail(tid uint, taskDetailUpdate model.TaskDetailsUpdate) (model.TaskResponse, int, error)
+	DeleteTask(tid uint) (int, error)
 }
 
 func NewServiceLayer(repo repository.RepoInterface) ServiceInterface {

@@ -104,3 +104,12 @@ func (s *service) UpadteAllTaskDetail(tid uint, taskDetailUpdate model.TaskDetai
 		TaskStatus:      resp.TaskStatus,
 	}, statusCode, nil
 }
+
+func (s *service) DeleteTask(tid uint) (int, error) {
+	statusCode, err := s.repo.DeleteTask(tid)
+	if err != nil {
+		log.Error().Err(err)
+		return statusCode, err
+	}
+	return statusCode, nil
+}

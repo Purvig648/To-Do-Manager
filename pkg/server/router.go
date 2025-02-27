@@ -20,4 +20,5 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.GET("/viewtask/:id", handler.ViewTask)
 	router.PATCH("/updatetaskstatus", handler.UpdateTaskStatus)
 	router.PUT("/updatealldetailsoftask/:id", handler.UpadteAllTaskDetail)
+	router.DELETE("/deletetask/:id", handler.DeleteTask)
 }

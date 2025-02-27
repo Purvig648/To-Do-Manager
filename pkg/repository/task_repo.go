@@ -83,3 +83,16 @@ func (r *repo) UpadteAllTaskDetail(tid uint, taskUpdateDetails model.TaskDetails
 	}
 	return taskUpdateDetail, http.StatusAccepted, nil
 }
+
+func (r *repo) DeleteTask(tid uint) (int, error) {
+	task := dbmodel.Task{
+		Model: gorm.Model{
+			ID: tid,
+		},
+	}
+	tx := r.db.Delete(&task)
+	if err := tx.Error; err != nil {
+		return http.StatusBadRequest, err
+	}
+	return http.StatusAccepted, nil
+}

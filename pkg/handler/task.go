@@ -185,3 +185,27 @@ func (h *handler) UpadteAllTaskDetail(c *gin.Context) {
 		"message":  "updated successfully",
 	})
 }
+
+func (h *handler) DeleteTask(c *gin.Context) {
+	id := c.Param("id")
+	tid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	statusCode, err := h.svc.DeleteTask(uint(tid))
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+		return
+	}
+	c.JSON(statusCode, gin.H{
+		"error":   nil,
+		"Message": "deleted task successfully",
+	})
+}
