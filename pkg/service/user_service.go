@@ -122,3 +122,12 @@ func (s *service) UpdateDetail(uid uint, req model.UserDetailUpdate, choice stri
 	}
 	return model.UserResponse{}, http.StatusAccepted, nil
 }
+
+func (s *service) DeleteUser(uid uint) (int, error) {
+	statusCode, err := s.repo.DeleteUser(uid)
+	if err != nil {
+		log.Error().Err(err)
+		return statusCode, err
+	}
+	return statusCode, nil
+}

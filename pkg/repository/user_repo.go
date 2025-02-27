@@ -97,3 +97,17 @@ func (r *repo) UpdateDetailEmail(id uint, req model.UserDetailUpdate) (dbmodel.U
 	}
 	return userDetail, http.StatusAccepted, nil
 }
+
+func (r *repo) DeleteUser(uid uint) (int, error) {
+	user := dbmodel.User{
+		Model: gorm.Model{
+			ID: uid,
+		},
+	}
+	tx := r.db.Delete(&user)
+	if err := tx.Error; err != nil {
+		log.Error().Err(err)
+		return http.StatusBadRequest, err
+	}
+	return http.StatusAccepted, nil
+}

@@ -169,3 +169,25 @@ func (h *handler) UpdateDetail(c *gin.Context) {
 		"Message":  "updated successfully",
 	})
 }
+
+func (h *handler) DeleteUser(c *gin.Context) {
+	id := c.Param("id")
+	uid, err := strconv.Atoi(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+	}
+	statusCode, err := h.svc.DeleteUser(uint(uid))
+	if err != nil {
+		c.JSON(statusCode, gin.H{
+			"error":    err.Error(),
+			"response": nil,
+		})
+	}
+	c.JSON(statusCode, gin.H{
+		"error":   nil,
+		"Message": "deleted succesfully",
+	})
+}

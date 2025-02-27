@@ -12,6 +12,7 @@ func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
 	router.GET("/viewuser", handler.ViewUser)
 	router.PUT("/updatealldetails/:id", handler.UpdateAllDetails)
 	router.PATCH("/updatedetail", handler.UpdateDetail)
+	router.DELETE("/deleteuser/:id", handler.DeleteUser)
 
 	router.POST("/createtask/:id", handler.CreateTask)
 	router.GET("/viewalltask", handler.ViewAllTask)

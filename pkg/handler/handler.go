@@ -16,6 +16,7 @@ type HandlerInterface interface {
 	ViewUser(c *gin.Context)
 	UpdateAllDetails(c *gin.Context)
 	UpdateDetail(c *gin.Context)
+	DeleteUser(c *gin.Context)
 
 	CreateTask(c *gin.Context)
 	ViewAllTask(c *gin.Context)

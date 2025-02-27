@@ -18,6 +18,7 @@ type RepoInterface interface {
 	UpdateAllDetails(id uint, request model.UserDetailsUpdate) (dbmodel.User, int, error)
 	UpdateDetailUsername(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error)
 	UpdateDetailEmail(id uint, req model.UserDetailUpdate) (dbmodel.User, int, error)
+	DeleteUser(uid uint) (int, error)
 
 	CreateTask(uid uint, taskData dbmodel.Task) (dbmodel.Task, int, error)
 	ViewAllTasK() ([]dbmodel.Task, int, error)
