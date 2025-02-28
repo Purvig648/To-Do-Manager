@@ -45,18 +45,23 @@ func (s *service) SignUpService(signUpData model.SignUp) (dbmodel.User, int, err
 	return userData, statusCode, nil
 }
 
-func (s *service) SignInService(signInData model.SignIn) (int, error) {
+func (s *service) SignInService(signInData model.SignIn) (string, int, error) {
 	userDetails, statusCode, err := s.repo.CheckEmail(signInData.EmailID)
 	if err != nil {
 		log.Error().Err(err).Msg("email id is not correct")
-		return statusCode, err
+		return "", statusCode, err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(userDetails.HashedPassword), []byte(signInData.Password))
 	if err != nil {
 		log.Error().Err(errors.New("the entered password is incorrect")).Msg("password does not match")
-		return http.StatusBadRequest, err
+		return "", http.StatusBadRequest, err
 	}
-	return statusCode, nil
+	token, err := s.auth.GenerateJWT(userDetails.ID)
+	if err != nil {
+		log.Error().Err(err)
+		return "", http.StatusBadRequest, err
+	}
+	return token, statusCode, nil
 }
 
 func (s *service) ViewAllUsers() ([]model.UserResponse, int, error) {

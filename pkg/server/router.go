@@ -3,15 +3,16 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/todo_manager/pkg/handler"
+	"github.com/todo_manager/pkg/middleware"
 )
 
-func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface) {
+func RegisterRouters(router *gin.Engine, handler handler.HandlerInterface, mid middleware.MidInterface) {
 
 	userRelatedTasks := router.Group("/user")
 	{
 		userRelatedTasks.POST("/signup", handler.SignUp)
 		userRelatedTasks.GET("/signin", handler.SignIn)
-		userRelatedTasks.GET("/viewallusers", handler.ViewAllUsers)
+		userRelatedTasks.GET("/viewallusers", mid.Middleware(), handler.ViewAllUsers)
 		userRelatedTasks.GET("/viewuser", handler.ViewUser)
 		userRelatedTasks.PUT("/updatealldetails/:id", handler.UpdateAllDetails)
 		userRelatedTasks.PATCH("/updatedetail", handler.UpdateDetail)

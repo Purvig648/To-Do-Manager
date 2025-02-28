@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/todo_manager/pkg/auth"
 	"github.com/todo_manager/pkg/model"
 	dbmodel "github.com/todo_manager/pkg/model/db_model"
 	"github.com/todo_manager/pkg/repository"
@@ -8,11 +9,12 @@ import (
 
 type service struct {
 	repo repository.RepoInterface
+	auth auth.Authentication
 }
 
 type ServiceInterface interface {
 	SignUpService(signUpData model.SignUp) (dbmodel.User, int, error)
-	SignInService(signInData model.SignIn) (int, error)
+	SignInService(signInData model.SignIn) (string, int, error)
 	ViewAllUsers() ([]model.UserResponse, int, error)
 	ViewUser(request model.UserRequest) (model.UserResponse, int, error)
 	UpdateAllDetails(id uint, req model.UserDetailsUpdate) (model.UserResponse, int, error)
@@ -28,8 +30,9 @@ type ServiceInterface interface {
 	DeleteTask(tid uint) (int, error)
 }
 
-func NewServiceLayer(repo repository.RepoInterface) ServiceInterface {
+func NewServiceLayer(repo repository.RepoInterface, auth auth.Authentication) ServiceInterface {
 	return &service{
 		repo: repo,
+		auth: auth,
 	}
 }

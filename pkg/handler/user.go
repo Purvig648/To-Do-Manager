@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/todo_manager/pkg/auth"
 	"github.com/todo_manager/pkg/model"
 	"github.com/todo_manager/pkg/util"
 )
@@ -45,7 +46,7 @@ func (h *handler) SignIn(c *gin.Context) {
 		})
 		return
 	}
-	statusCode, err := h.svc.SignInService(signInData)
+	token, statusCode, err := h.svc.SignInService(signInData)
 	if err != nil {
 		c.JSON(statusCode, gin.H{
 			"error":    err.Error(),
@@ -55,11 +56,22 @@ func (h *handler) SignIn(c *gin.Context) {
 	}
 	c.JSON(http.StatusAccepted, gin.H{
 		"error":    nil,
-		"response": "sign in successful",
+		"response": token,
+		"Message":  "sign in successful",
 	})
 }
 
 func (h *handler) ViewAllUsers(c *gin.Context) {
+	claims, exists := c.Get("claims")
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+	userClaims := claims.(*auth.Claims)
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Viewing all users",
+		"user":    userClaims.ID,
+	})
 	resp, statusCode, err := h.svc.ViewAllUsers()
 	if err != nil {
 		c.JSON(statusCode, gin.H{
